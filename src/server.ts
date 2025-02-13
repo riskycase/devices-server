@@ -1,6 +1,7 @@
-const { createServer } = require("http");
-const { Server } = require("socket.io");
-const next = require("next");
+import { createServer } from "http";
+import { Server } from "socket.io";
+import next from "next";
+import { authenticate } from "./socket/auth";
 
 const port = parseInt(process.env.PORT || "3000", 10);
 const dev = process.env.NODE_ENV !== "production";
@@ -11,7 +12,9 @@ const handler = app.getRequestHandler();
 app.prepare().then(() => {
   const httpServer = createServer(handler);
 
-  new Server(httpServer);
+  const io = new Server(httpServer);
+
+  io.use(authenticate)
 
   httpServer
     .once("error", (err: any) => {

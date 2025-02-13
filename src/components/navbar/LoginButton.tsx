@@ -8,6 +8,7 @@ import {
   Flex,
   Menu,
   MenuButton,
+  MenuDivider,
   MenuItem,
   MenuList,
   Spinner,
@@ -16,12 +17,14 @@ import {
 import { useState } from "react";
 import { FaSignOutAlt } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa6";
-import { User } from "@prisma/client";
 import {
+    MdAdminPanelSettings,
   MdArrowDropDown,
   MdDashboard,
+  MdDevicesOther,
 } from "react-icons/md";
 import NextLink from "next/link";
+import { Level, User } from "@prisma/client";
 
 export default function Login({ user }: { user: User | null }) {
   const session = useSession();
@@ -59,6 +62,20 @@ export default function Login({ user }: { user: User | null }) {
             <MenuItem icon={<MdDashboard />} href={"/dashboard"} as={NextLink}>
               Dashboard
             </MenuItem>
+            <MenuItem icon={<MdDevicesOther />} href={"/devices"} as={NextLink}>
+              Manage Devices
+            </MenuItem>{user?.level === Level.ADMIN && (
+              <>
+                <MenuItem
+                  icon={<MdAdminPanelSettings />}
+                  href={"/admin/dashboard"}
+                  as={NextLink}
+                >
+                  Admin Dashboard
+                </MenuItem>
+                <MenuDivider />
+              </>
+            )}
             <MenuItem
               onClick={() => {
                 signOut();

@@ -1,14 +1,16 @@
 import { createServer } from "http";
 import { Server } from "socket.io";
 import next from "next";
+import { authenticate } from "@/socket/auth";
 const port = parseInt(process.env.PORT || "3000", 10);
 const dev = process.env.NODE_ENV !== "production";
 const hostname = process.env.HOSTNAME || "localhost";
-const app = next({ dev, hostname, port });
+const app = next({ dev, hostname, port, turbo: !dev });
 const handler = app.getRequestHandler();
 app.prepare().then(() => {
     const httpServer = createServer(handler);
-    new Server(httpServer);
+    const io = new Server(httpServer);
+    io.use(authenticate);
     httpServer
         .once("error", (err) => {
         console.error(err);

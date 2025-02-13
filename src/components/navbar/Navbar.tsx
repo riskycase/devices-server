@@ -1,7 +1,7 @@
 import { Box, Flex, Link, Text, theme } from "@chakra-ui/react";
 import LoginButton from "./LoginButton";
-import { getUser } from "@/actions";
 import NextLink from "next/link";
+import { getUser } from "@/actions";
 
 export default async function Navbar() {
   const user = await getUser();
