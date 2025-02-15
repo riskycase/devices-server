@@ -1,15 +1,15 @@
-type ApiFailure<T> = {
+export type ApiFailure<T> = {
   responseCode: "UNAUTHENTICATED" | "UNAUTHORISED" | "FORBIDDEN" | "DBERROR";
 };
 
-type ApiSuccess<T> = {
+export type ApiSuccess<T> = {
   responseCode: "SUCCESS";
   result: T;
 };
 
-type ApiResponse<T> = ApiFailure<T> | ApiSuccess<T>;
+export type ApiResponse<T> = ApiFailure<T> | ApiSuccess<T>;
 
-type EmptyApiResponse = {
+export type EmptyApiResponse = {
   responseCode:
     | "SUCCESS"
     | "UNAUTHENTICATED"
@@ -18,8 +18,12 @@ type EmptyApiResponse = {
     | "DBERROR";
 };
 
-type SocketUpdateEvent = {
-  message: any;
-  deviceId: string;
-  secret: string;
+export type SocketDetails = {
+  id: string;
+  authToken: string;
+  [channel: string]: any;
+};
+
+export type SocketMap = {
+  [deviceId: string]: SocketDetails;
 };

@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import { db } from "@/db";
+import { ApiResponse, EmptyApiResponse } from "@/types";
 import { Device } from "@prisma/client";
 import { randomBytes } from "crypto";
 import { redirect } from "next/navigation";

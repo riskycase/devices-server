@@ -2,6 +2,7 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import next from "next";
 import { authenticate } from "./socket/auth";
+import connectionManager from "./socket/connectionManager";
 
 const port = parseInt(process.env.PORT || "3000", 10);
 const dev = process.env.NODE_ENV !== "production";
@@ -14,7 +15,9 @@ app.prepare().then(() => {
 
   const io = new Server(httpServer);
 
-  io.use(authenticate)
+  io.use(authenticate);
+
+  io.on("connection", connectionManager);
 
   httpServer
     .once("error", (err: any) => {
