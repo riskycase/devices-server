@@ -17,7 +17,7 @@ app.prepare().then(() => {
 
   io.use(authenticate);
 
-  io.on("connection", connectionManager);
+  io.on("connection", connectionManager(io));
 
   httpServer
     .once("error", (err: any) => {

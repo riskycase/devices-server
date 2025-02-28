@@ -16,6 +16,5 @@ export default function connectionManager(socket) {
         if (messageJSON.authToken !== repo[socket.handshake.auth.deviceId].authToken)
             return;
         repo[socket.handshake.auth.deviceId][channel] = JSON.stringify(messageJSON.body);
-        console.log(repo);
     });
 }
