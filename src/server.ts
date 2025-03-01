@@ -13,11 +13,13 @@ const handler = app.getRequestHandler();
 app.prepare().then(() => {
   const httpServer = createServer(handler);
 
-  const io = new Server(httpServer);
+  const io = new Server(httpServer, {
+    addTrailingSlash: false,
+  });
 
   io.use(authenticate);
 
-  io.on("connection", connectionManager(io));
+  io.on("request", connectionManager(io));
 
   httpServer
     .once("error", (err: unknown) => {

@@ -64,6 +64,11 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./
 
+# Custom server
+COPY --from=builder --chown=nextjs:nodejs /app/dist ./
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/next ./node_modules/next
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/socket.io ./node_modules/socket.io
+
 RUN npm install prisma
 
 RUN mkdir util
