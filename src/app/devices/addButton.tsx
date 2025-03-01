@@ -17,7 +17,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { redirect } from "next/navigation";
-import { useRef, useState } from "react";
+import { RefObject, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 
 export default function AddNewDeviceButton({
@@ -26,7 +26,7 @@ export default function AddNewDeviceButton({
   addDisabled: boolean;
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = useRef<FocusableElement>();
+  const cancelRef = useRef<HTMLButtonElement>(null) as RefObject<HTMLButtonElement>;
   const [name, setName] = useState("");
   const [loading, setLoading] = useBoolean();
   return (

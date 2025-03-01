@@ -1,6 +1,4 @@
-import { Socket } from "socket.io";
-
-export type ApiFailure<T> = {
+export type ApiFailure = {
   responseCode: "UNAUTHENTICATED" | "UNAUTHORISED" | "FORBIDDEN" | "DBERROR";
 };
 
@@ -9,7 +7,7 @@ export type ApiSuccess<T> = {
   result: T;
 };
 
-export type ApiResponse<T> = ApiFailure<T> | ApiSuccess<T>;
+export type ApiResponse<T> = ApiFailure | ApiSuccess<T>;
 
 export type EmptyApiResponse = {
   responseCode:
@@ -24,7 +22,7 @@ export type SocketDetails = {
   id: string;
   authToken: string;
   userId: string;
-  [channel: string]: any;
+  [channel: string]: string | undefined;
 };
 
 export type SocketMap = {

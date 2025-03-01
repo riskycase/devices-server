@@ -2,7 +2,7 @@ import { Server, Socket } from "socket.io";
 import { devices } from "../devices/repo";
 import { SocketMap } from "@/types";
 
-export default function (server: Server) {
+export default function connectionManager(server: Server) {
   return function connectionManager(socket: Socket) {
     if (socket.handshake.auth.deviceId) {
       const authToken = devices[socket.handshake.auth.deviceId].authToken;

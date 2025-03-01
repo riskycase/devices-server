@@ -2,7 +2,7 @@ import { Device, Session } from "@prisma/client";
 import { db } from "../db";
 import { randomBytes } from "crypto";
 import { devices } from "../devices/repo";
-import { Socket } from "socket.io";
+import { ExtendedError, Socket } from "socket.io";
 
 async function findDevice(deviceId: string): Promise<Device> {
   return await db.device.findFirstOrThrow({ where: { id: deviceId } });
@@ -12,7 +12,10 @@ async function findSession(sessionToken: string): Promise<Session> {
   return await db.session.findFirstOrThrow({ where: { sessionToken } });
 }
 
-export function authenticate(socket: Socket, next: any) {
+export function authenticate(
+  socket: Socket,
+  next: (err?: ExtendedError) => void
+) {
   const { deviceId, secret, sessionToken, userId } = socket.handshake.auth;
   if (!!deviceId && !!secret) {
     findDevice(deviceId).then((device) => {

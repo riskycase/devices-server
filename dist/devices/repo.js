@@ -1,2 +1,1 @@
-const details = {};
-export default details;
+export const devices = {};

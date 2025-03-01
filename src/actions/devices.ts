@@ -9,7 +9,7 @@ import { redirect } from "next/navigation";
 
 export async function createDevice(name: string): Promise<ApiResponse<Device>> {
   const user = await auth();
-  if (!user || !user.user) {
+  if (!user || !user.user || !user.user.id) {
     return {
       responseCode: "UNAUTHENTICATED",
     };
@@ -17,7 +17,7 @@ export async function createDevice(name: string): Promise<ApiResponse<Device>> {
   const secret = randomBytes(16).toString("hex");
   try {
     const [currentUser, existingDevices] = await Promise.all([
-      db.user.findFirstOrThrow({ where: { id: user.user.id!! } }),
+      db.user.findFirstOrThrow({ where: { id: user.user.id } }),
       db.device.findMany({ where: { userId: user.user.id } }),
     ]);
     if (existingDevices.length >= currentUser.deviceLimit) {
@@ -25,15 +25,15 @@ export async function createDevice(name: string): Promise<ApiResponse<Device>> {
         responseCode: "FORBIDDEN",
       };
     }
-    const device = await db.device.create({
+    await db.device.create({
       data: {
         name,
         secretKey: secret,
-        userId: user.user.id!!,
+        userId: user.user.id,
       },
     });
     redirect("/devices");
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.trace(e);
     return {
       responseCode: "DBERROR",
@@ -57,7 +57,7 @@ export async function getDevice(
         responseCode: "UNAUTHORISED",
       };
     }
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.trace(e);
     return {
       responseCode: "DBERROR",
@@ -80,7 +80,7 @@ export async function getDevicesForUser(): Promise<ApiResponse<Array<Device>>> {
       responseCode: "SUCCESS",
       result: devices,
     };
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.trace(e);
     return {
       responseCode: "DBERROR",
@@ -107,7 +107,7 @@ export async function deleteDevice(device: Device): Promise<EmptyApiResponse> {
         responseCode: "UNAUTHORISED",
       };
     }
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.trace(e);
     return {
       responseCode: "DBERROR",

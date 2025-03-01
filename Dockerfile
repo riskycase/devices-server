@@ -1,7 +1,7 @@
 FROM node:20-alpine AS base
 
-LABEL org.opencontainers.image.source=https://github.com/riskycase/link-shortener
-LABEL org.opencontainers.image.description="Link shortener implemented for riskycase.in"
+LABEL org.opencontainers.image.source=https://github.com/riskycase/devices-server
+LABEL org.opencontainers.image.description="Cross device connection server"
 LABEL org.opencontainers.image.licenses=GPL-3.0-only
 
 # Install dependencies only when needed

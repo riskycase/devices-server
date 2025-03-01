@@ -20,7 +20,7 @@ app.prepare().then(() => {
   io.on("connection", connectionManager(io));
 
   httpServer
-    .once("error", (err: any) => {
+    .once("error", (err: unknown) => {
       console.error(err);
       process.exit(1);
     })

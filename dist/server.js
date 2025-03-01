@@ -12,7 +12,7 @@ app.prepare().then(() => {
     const httpServer = createServer(handler);
     const io = new Server(httpServer);
     io.use(authenticate);
-    io.on("connection", connectionManager);
+    io.on("connection", connectionManager(io));
     httpServer
         .once("error", (err) => {
         console.error(err);

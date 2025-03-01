@@ -1,3 +1,5 @@
+"use server";
+
 import { getUser } from "@/actions";
 import { getDevicesForUser } from "@/actions/devices";
 import {

@@ -1,6 +1,6 @@
 "use client";
 
-import { createDevice, deleteDevice } from "@/actions";
+import { deleteDevice } from "@/actions";
 import {
   AlertDialog,
   AlertDialogBody,
@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { Device } from "@prisma/client";
 import { redirect } from "next/navigation";
-import { useRef } from "react";
+import { RefObject, useRef } from "react";
 import { MdCheck, MdCopyAll } from "react-icons/md";
 
 export default function DeviceDetail({ device }: { device: Device }) {
@@ -27,7 +27,7 @@ export default function DeviceDetail({ device }: { device: Device }) {
     device.secretKey
   );
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = useRef<FocusableElement>();
+  const cancelRef = useRef<HTMLButtonElement>(null) as RefObject<HTMLButtonElement>;
   const [loading, setLoading] = useBoolean();
   return (
     <>

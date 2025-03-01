@@ -1,42 +1,59 @@
 "use client";
 
+import { getDevicesForUser } from "@/actions/devices";
 import { socket } from "@/socket";
-import { SocketMap } from "@/types";
 import { Flex, Heading, Text } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
+import { Device } from "@prisma/client";
+import { UpdateSession, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import DeviceDetail from "./deviceDetail";
+import { Session } from "next-auth";
 
 export default function Dashboard() {
-  const session = useSession();
+  const session = useSession() as {
+    update: UpdateSession;
+    data: Session & { sessionToken: string, userId: string };
+    status: string
+  };
+  const [devices, setDevices] = useState<Array<Device>>([]);
   const [listener, setListener] = useState(socket);
-  const [devicesState, setDevicesState] = useState<SocketMap>({});
+  const [devicesState, setDevicesState] = useState<string>("{}");
 
   useEffect(() => {
     if (session.status === "authenticated") {
+      getDevicesForUser().then((response) => {
+        if (response.responseCode === "SUCCESS") {
+          setDevices(response.result);
+        }
+      });
       listener.auth = {
         sessionToken: session.data.sessionToken,
         userId: session.data.userId,
       };
       listener.on("init", (message) => {
-        setDevicesState(JSON.parse(message));
+        setDevicesState(message);
       });
       listener.onAny((channel, message) => {
         if (channel === "init") return;
         const messageJSON = JSON.parse(message);
         const deviceId = messageJSON.deviceId;
         setDevicesState((devicesState) => {
-          if (channel.startsWith("delta.")) {
-            devicesState[deviceId][channel.replace("delta.", "")] =
-              JSON.stringify({
-                ...JSON.parse(
-                  devicesState[deviceId][channel.replace("delta.", "")] || "{}"
-                ),
-                ...JSON.parse(messageJSON.body),
-              });
-          } else {
-            devicesState[deviceId][channel] = messageJSON.body;
+          const devicesStateJSON = JSON.parse(devicesState);
+          if (devicesStateJSON[deviceId]) {
+            if (channel.startsWith("delta.")) {
+              devicesStateJSON[deviceId][channel.replace("delta.", "")] =
+                JSON.stringify({
+                  ...JSON.parse(
+                    devicesStateJSON[deviceId][channel.replace("delta.", "")] ||
+                      "{}"
+                  ),
+                  ...JSON.parse(messageJSON.body),
+                });
+            } else {
+              devicesStateJSON[deviceId][channel] = messageJSON.body;
+            }
           }
-          return devicesState;
+          return JSON.stringify(devicesStateJSON);
         });
       });
       listener.connect();
@@ -44,7 +61,25 @@ export default function Dashboard() {
     }
   }, [session.status]);
   return session.data?.user ? (
-    <></>
+    <Flex
+      direction="column"
+      padding={4}
+      width="100%"
+      gap={4}
+      flex={1}
+      className="h-full"
+    >
+      <Heading>Dashboard</Heading>
+      <Flex direction="column" gap={{ base: 1, lg: 2 }}>
+        {devices.map((device) => (
+          <DeviceDetail
+            key={device.id}
+            device={device}
+            socketDetails={JSON.parse(devicesState)[device.id]}
+          />
+        ))}
+      </Flex>
+    </Flex>
   ) : (
     <Flex
       direction="column"
