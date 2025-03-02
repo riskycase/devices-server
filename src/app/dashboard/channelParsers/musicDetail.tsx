@@ -132,7 +132,7 @@ export default function MusicDetails({
       (player) => JSON.parse(musicDetails[player]) as MusicPlayerState
     );
     const albumArts = JSON.parse(albumArtsString);
-    return (
+    return players.length > 0 ? (
       <Flex direction="column" alignItems="stretch" gap={2}>
         <Text fontSize="xx-large">Currently playing</Text>
         <Tabs>
@@ -158,6 +158,8 @@ export default function MusicDetails({
           </TabPanels>
         </Tabs>
       </Flex>
+    ) : (
+      <></>
     );
   } else return <></>;
 }
