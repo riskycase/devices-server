@@ -33,6 +33,8 @@ COPY . .
 
 RUN npx prisma generate
 
+RUN npm install socket.io@4 prisma
+
 RUN \
     if [ -f yarn.lock ]; then yarn run build; \
     elif [ -f package-lock.json ]; then npm run build; \
@@ -66,10 +68,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/prisma ./
 
 # Custom server
 COPY --from=builder --chown=nextjs:nodejs /app/dist ./
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/next ./node_modules/next
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/socket.io ./node_modules/socket.io
-
-RUN npm install prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 
 RUN mkdir util
 
