@@ -126,7 +126,7 @@ export default function BatteryDetails({
                 {Number(deviceBatteryDetails.voltage / 1000).toFixed(1)}V
               </Text>
               <Text>
-                {Number(deviceBatteryDetails.current / 1000).toFixed(1)}mA
+                {Number(Math.abs(deviceBatteryDetails.current / 1000)).toFixed(1)}mA
               </Text>
             </Flex>
           </Flex>
