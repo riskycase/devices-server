@@ -65,9 +65,14 @@ jobs:
       contents: read
       packages: write
     steps:
-      - name: Trigger portainer update
-        uses: riskycase/cf-access-portainer-stack-update@v1
+      - name: Authenticate with cloudflare
+        uses: Boostport/setup-cloudflare-warp@v1
         with:
-          cf-client-id: ${{ secrets.CF_CLIENT_ID }}
-          cf-client-secret: ${{ secrets.CF_CLIENT_SECRET }}
-          endpoint: ${{ secrets.ENDPOINT }}
+          organization: "riskycase"
+          auth_client_id: ${{ secrets.CF_CLIENT_ID }}
+          auth_client_secret: ${{ secrets.CF_CLIENT_SECRET }}
+      - name: Make Request
+        id: myRequest
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: ${{ secrets.ENDPOINT }}
