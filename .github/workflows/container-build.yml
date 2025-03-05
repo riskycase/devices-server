@@ -14,6 +14,7 @@ env:
 
 jobs:
   build-and-push-image:
+    name: "Build and publish image"
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -56,6 +57,14 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
+  trigger-update:
+    name: "Trigger update on Portainer"
+    needs: build-and-push-image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
       - name: Trigger portainer update
         uses: riskycase/cf-access-portainer-stack-update@v1
         with:
