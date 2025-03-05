@@ -12,12 +12,16 @@ import { Session } from "next-auth";
 export default function Dashboard() {
   const session = useSession() as {
     update: UpdateSession;
-    data: Session & { sessionToken: string, userId: string };
-    status: string
+    data: Session & { sessionToken: string; userId: string };
+    status: string;
   };
   const [devices, setDevices] = useState<Array<Device>>([]);
   const [listener, setListener] = useState(socket);
   const [devicesState, setDevicesState] = useState<string>("{}");
+
+  function sendCommand(commandString: string) {
+    listener.emit("command", commandString)
+  }
 
   useEffect(() => {
     if (session.status === "authenticated") {
@@ -31,26 +35,38 @@ export default function Dashboard() {
         userId: session.data.userId,
       };
       listener.on("init", (message) => {
+        console.log(message);
         setDevicesState(message);
       });
       listener.onAny((channel, message) => {
         if (channel === "init") return;
         const messageJSON = JSON.parse(message);
         const deviceId = messageJSON.deviceId;
+        if (channel === "deviceDisconnect") {
+          const devicesStateJSON = JSON.parse(devicesState);
+          delete devicesStateJSON[deviceId];
+          setDevicesState(JSON.stringify(devicesStateJSON));
+          return;
+        }
         setDevicesState((devicesState) => {
           const devicesStateJSON = JSON.parse(devicesState);
-          if (devicesStateJSON[deviceId]) {
+          if (
+            devicesStateJSON[deviceId] &&
+            devicesStateJSON[deviceId].channels
+          ) {
             if (channel.startsWith("delta.")) {
-              devicesStateJSON[deviceId][channel.replace("delta.", "")] =
-                JSON.stringify({
-                  ...JSON.parse(
-                    devicesStateJSON[deviceId][channel.replace("delta.", "")] ||
-                      "{}"
-                  ),
-                  ...JSON.parse(messageJSON.body),
-                });
+              devicesStateJSON[deviceId].channels[
+                channel.replace("delta.", "")
+              ] = JSON.stringify({
+                ...JSON.parse(
+                  devicesStateJSON[deviceId].channels[
+                    channel.replace("delta.", "")
+                  ] || "{}"
+                ),
+                ...JSON.parse(messageJSON.body),
+              });
             } else {
-              devicesStateJSON[deviceId][channel] = messageJSON.body;
+              devicesStateJSON[deviceId].channels[channel] = messageJSON.body;
             }
           }
           return JSON.stringify(devicesStateJSON);
@@ -76,6 +92,7 @@ export default function Dashboard() {
             key={device.id}
             device={device}
             socketDetails={JSON.parse(devicesState)[device.id]}
+            sendCommand={sendCommand}
           />
         ))}
       </Flex>

@@ -1,9 +1,11 @@
 "use client";
 
+import { SendCommandFunction } from "@/types";
 import {
   Card,
   CardBody,
   Flex,
+  IconButton,
   Image,
   Slider,
   SliderFilledTrack,
@@ -17,6 +19,12 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
+import {
+  MdPause,
+  MdPlayArrow,
+  MdSkipNext,
+  MdSkipPrevious,
+} from "react-icons/md";
 
 type MusicPlayerState = {
   title: string;
@@ -47,9 +55,11 @@ enum PLAYING_STATE {
 function MusicPlayer({
   musicDetails,
   artBase64,
+  sendCommand,
 }: {
   musicDetails: MusicPlayerState;
   artBase64: string;
+  sendCommand: SendCommandFunction;
 }) {
   const [milliseconds, setMilliseconds] = useState(Date.now());
   useEffect(() => {
@@ -78,16 +88,19 @@ function MusicPlayer({
   return (
     <Card>
       <CardBody>
-        <Flex direction="row" gap={4}>
+        <Flex direction={{ base: "column", lg: "row" }} gap={4}>
           <Image
             aspectRatio={1}
             src={`data:image/png;base64,${artBase64}`}
             height="12rem"
             objectFit="contain"
             alt={`Album art for ${musicDetails.title}`}
+            maxWidth="70vw"
           />
           <Flex direction="column" gap={2} flex={1}>
-            <Text fontSize="larger">{musicDetails.title}</Text>
+            <Text fontSize="larger" noOfLines={1}>
+              {musicDetails.title}
+            </Text>
             <Text fontStyle="italic">
               {musicDetails.album && `from ${musicDetails.album} `}
               {musicDetails.artist && `by ${musicDetails.artist}`}
@@ -102,6 +115,35 @@ function MusicPlayer({
               <Text>{startLabel}</Text>
               <Text>{endLabel}</Text>
             </Flex>
+            <Flex direction="row" justifyContent="space-around">
+              <IconButton
+                icon={<MdSkipPrevious />}
+                aria-label="Music previous"
+                onClick={() => sendCommand("prev")}
+              />
+              <IconButton
+                icon={
+                  musicDetails.playingState == PLAYING_STATE.PLAYING ? (
+                    <MdPause />
+                  ) : (
+                    <MdPlayArrow />
+                  )
+                }
+                onClick={() =>
+                  sendCommand(
+                    musicDetails.playingState == PLAYING_STATE.PLAYING
+                      ? "pause"
+                      : "play"
+                  )
+                }
+                aria-label="Music play/pause"
+              />
+              <IconButton
+                icon={<MdSkipNext />}
+                aria-label="Music next"
+                onClick={() => sendCommand("next")}
+              />
+            </Flex>
           </Flex>
         </Flex>
       </CardBody>
@@ -112,9 +154,11 @@ function MusicPlayer({
 export default function MusicDetails({
   detailsString,
   albumArtsString,
+  sendCommand,
 }: {
   detailsString: string | undefined;
   albumArtsString: string | undefined;
+  sendCommand: SendCommandFunction;
 }) {
   if (detailsString && albumArtsString) {
     const musicDetails = JSON.parse(detailsString);
@@ -152,6 +196,9 @@ export default function MusicDetails({
                 <MusicPlayer
                   musicDetails={player}
                   artBase64={albumArts[players[index]]}
+                  sendCommand={(commandContent: string) =>
+                    sendCommand(`${players[index]}=:=${commandContent}`)
+                  }
                 />
               </TabPanel>
             ))}

@@ -1,4 +1,4 @@
-import { SocketDetails } from "@/types";
+import { SendCommandFunction, SocketDetails } from "@/types";
 import { Flex, Text } from "@chakra-ui/react";
 import { Device } from "@prisma/client";
 import BatteryDetails from "./channelParsers/batteryDetail";
@@ -7,9 +7,11 @@ import MusicDetails from "./channelParsers/musicDetail";
 export default function DeviceDetail({
   device,
   socketDetails,
+  sendCommand,
 }: {
   device: Device;
   socketDetails?: SocketDetails;
+  sendCommand: SendCommandFunction;
 }) {
   return (
     <Flex
@@ -22,14 +24,27 @@ export default function DeviceDetail({
     >
       <Flex direction="row" justifyContent="space-between">
         <Text fontSize="larger">{device.name}</Text>
-        <BatteryDetails detailsString={socketDetails?.batteryDetails} />
+        {socketDetails ? (
+          <BatteryDetails
+            detailsString={socketDetails?.channels.batteryDetails}
+          />
+        ) : (
+          <Text fontStyle="italic">Disconnected</Text>
+        )}
       </Flex>
-      <Flex direction="column" gap={2}>
-        <MusicDetails
-          detailsString={socketDetails?.musicDetails}
-          albumArtsString={socketDetails?.albumArtDetails}
-        />
-      </Flex>
+      {socketDetails ? (
+        <Flex direction="column" gap={2}>
+          <MusicDetails
+            detailsString={socketDetails?.channels.musicDetails}
+            albumArtsString={socketDetails?.channels.albumArtDetails}
+            sendCommand={(commandContent: string) =>
+              sendCommand(`${device.id}=:=music=:=${commandContent}`)
+            }
+          />
+        </Flex>
+      ) : (
+        <></>
+      )}
     </Flex>
   );
 }

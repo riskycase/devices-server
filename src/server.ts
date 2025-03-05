@@ -1,7 +1,7 @@
 import { createServer } from "http";
 import { Server } from "socket.io";
 import next from "next";
-import { authenticate } from "./socket/auth";
+import { authenticateGenerator } from "./socket/auth";
 import connectionManager from "./socket/connectionManager";
 
 const port = parseInt(process.env.PORT || "3000", 10);
@@ -15,7 +15,7 @@ app.prepare().then(() => {
 
   const io = new Server(httpServer);
 
-  io.use(authenticate);
+  io.use(authenticateGenerator(io));
 
   io.on("connection", connectionManager(io));
 

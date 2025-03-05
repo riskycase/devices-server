@@ -59,13 +59,13 @@ function getIcon(
     return MdBatteryAlert;
   } else {
     if (status == BATTERY_STATUS.Discharging) {
-        if (batteryLevel === 100) return MdBatteryFull;
-        if (batteryLevel >= 90) return MdBattery90;
-        if (batteryLevel >= 80) return MdBattery80;
-        if (batteryLevel >= 60) return MdBattery60;
-        if (batteryLevel >= 50) return MdBattery50;
-        if (batteryLevel >= 30) return MdBattery30;
-        return MdBattery20;
+      if (batteryLevel === 100) return MdBatteryFull;
+      if (batteryLevel >= 90) return MdBattery90;
+      if (batteryLevel >= 80) return MdBattery80;
+      if (batteryLevel >= 60) return MdBattery60;
+      if (batteryLevel >= 50) return MdBattery50;
+      if (batteryLevel >= 30) return MdBattery30;
+      return MdBattery20;
     } else {
       if (batteryLevel === 100) return MdBatteryChargingFull;
       if (batteryLevel >= 90) return MdBatteryCharging90;
@@ -83,7 +83,6 @@ export default function BatteryDetails({
 }: {
   detailsString: string | undefined;
 }) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   if (detailsString) {
     const deviceBatteryDetails = JSON.parse(detailsString);
     const iconElement = getIcon(
@@ -97,15 +96,11 @@ export default function BatteryDetails({
       BATTERY_POWER_SOURCE[deviceBatteryDetails.powerSource];
     deviceBatteryDetails.status = BATTERY_STATUS[deviceBatteryDetails.status];
     return (
-      <Popover isOpen={isOpen} onClose={onClose} placement="bottom-end">
+      <Popover
+        placement="bottom-end"
+      >
         <PopoverTrigger>
-          <Flex
-            direction="row"
-            alignItems="center"
-            gap={2}
-            onMouseLeave={onClose}
-            onMouseEnter={onOpen}
-          >
+          <Flex direction="row" alignItems="center" gap={2}>
             <Text>{deviceBatteryDetails.level}%</Text>
             {icon.iconElement && <icon.iconElement />}
           </Flex>
@@ -115,8 +110,6 @@ export default function BatteryDetails({
             direction="row"
             justifyContent="space-between"
             alignItems="start"
-            onMouseLeave={onClose}
-            onMouseEnter={onOpen}
           >
             <Flex direction="column" alignItems="start" gap={1}>
               <Text>Status: {deviceBatteryDetails.status}</Text>

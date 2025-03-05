@@ -1,3 +1,3 @@
 import { SocketMap } from "../types";
 
-export const devices: SocketMap = {};
+export let devices: SocketMap = {};
