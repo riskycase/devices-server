@@ -57,7 +57,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Trigger portainer update
-        uses: riskycase/cf-access-portainer-stack-update
+        uses: riskycase/cf-access-portainer-stack-update@v1
         with:
           cf-client-id: ${{ secrets.CF_CLIENT_ID }}
           cf-client-secret: ${{ secrets.CF_CLIENT_SECRET }}
