@@ -15,12 +15,18 @@ export default function Footer() {
       backgroundColor={theme.colors.gray[800]}
       position="sticky"
     >
-      <Link as={NextLink} href="https://github.com/riskycase/devices-server">
-        <Flex direction="row" alignItems="center" gap={1}>
-          <FaGithub />
-          <Text>Source Code</Text>
-        </Flex>
-      </Link>
+      <Flex direction="row" alignItems="center" gap={1}>
+        <Link as={NextLink} href="https://github.com/riskycase/devices-server">
+          <Flex direction="row" alignItems="center" gap={1}>
+            <FaGithub />
+            <Text>Source Code</Text>
+          </Flex>
+        </Link>
+        <Text>by</Text>
+        <Link as={NextLink} href="https://riskycase.in">
+          <Text>riskycase</Text>
+        </Link>
+      </Flex>
     </Flex>
   );
 }

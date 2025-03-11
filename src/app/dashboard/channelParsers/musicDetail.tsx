@@ -112,7 +112,7 @@ function MusicPlayer({
             <Slider
               min={0}
               max={endTime - startTime}
-              value={durationNow}
+              defaultValue={durationNow}
               onChangeEnd={(seekToDurarion) =>
                 sendCommand(`seekTo=:=${seekToDurarion}`)
               }
