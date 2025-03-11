@@ -62,6 +62,8 @@ function MusicPlayer({
   sendCommand: SendCommandFunction;
 }) {
   const [milliseconds, setMilliseconds] = useState(Date.now());
+  const [seeking, setSeeking] = useState(false);
+  const [currentSeek, setCurrentSeek] = useState(0);
   useEffect(() => {
     const updater = setInterval(() => setMilliseconds(Date.now()), 100);
     return () => {
@@ -112,10 +114,16 @@ function MusicPlayer({
             <Slider
               min={0}
               max={endTime - startTime}
-              defaultValue={durationNow}
-              onChangeEnd={(seekToDurarion) =>
-                sendCommand(`seekTo=:=${seekToDurarion}`)
-              }
+              value={seeking ? currentSeek : durationNow}
+              onChangeEnd={(seekToDurarion) => {
+                sendCommand(`seekTo=:=${seekToDurarion}`);
+                setSeeking(false);
+              }}
+              onChange={setCurrentSeek}
+              onChangeStart={(seekStart) => {
+                setCurrentSeek(seekStart);
+                setSeeking(true);
+              }}
             >
               <SliderTrack>
                 <SliderFilledTrack />
