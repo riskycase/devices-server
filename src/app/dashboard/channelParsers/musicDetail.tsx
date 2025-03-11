@@ -88,7 +88,11 @@ function MusicPlayer({
   return (
     <Card>
       <CardBody>
-        <Flex direction={{ base: "column", lg: "row" }} gap={4}>
+        <Flex
+          direction={{ base: "column", lg: "row" }}
+          gap={4}
+          alignItems="center"
+        >
           <Image
             aspectRatio={1}
             src={`data:image/png;base64,${artBase64}`}
@@ -105,7 +109,14 @@ function MusicPlayer({
               {musicDetails.album && `from ${musicDetails.album} `}
               {musicDetails.artist && `by ${musicDetails.artist}`}
             </Text>
-            <Slider min={0} max={endTime - startTime} value={durationNow}>
+            <Slider
+              min={0}
+              max={endTime - startTime}
+              value={durationNow}
+              onChangeEnd={(seekToDurarion) =>
+                sendCommand(`seekTo=:=${seekToDurarion}`)
+              }
+            >
               <SliderTrack>
                 <SliderFilledTrack />
               </SliderTrack>
