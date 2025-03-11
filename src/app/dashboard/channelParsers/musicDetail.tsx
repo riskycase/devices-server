@@ -25,6 +25,7 @@ import {
   MdSkipNext,
   MdSkipPrevious,
 } from "react-icons/md";
+import PauseMarquee from "../components/PauseMarquee";
 
 type MusicPlayerState = {
   title: string;
@@ -93,7 +94,7 @@ function MusicPlayer({
         <Flex
           direction={{ base: "column", lg: "row" }}
           gap={4}
-          alignItems="center"
+          alignItems="stretch"
         >
           <Image
             aspectRatio={1}
@@ -102,15 +103,20 @@ function MusicPlayer({
             objectFit="contain"
             alt={`Album art for ${musicDetails.title}`}
             maxWidth="70vw"
+            alignSelf="center"
           />
           <Flex direction="column" gap={2} flex={1}>
-            <Text fontSize="larger" noOfLines={1}>
-              {musicDetails.title}
-            </Text>
-            <Text fontStyle="italic">
+            <PauseMarquee>
+              <Text fontSize="larger" noOfLines={1}>
+                {musicDetails.title}
+              </Text>
+            </PauseMarquee>
+            <PauseMarquee>
+            <Text fontStyle="italic" noOfLines={1}>
               {musicDetails.album && `from ${musicDetails.album} `}
               {musicDetails.artist && `by ${musicDetails.artist}`}
             </Text>
+            </PauseMarquee>
             <Slider
               min={0}
               max={endTime - startTime}
