@@ -107,12 +107,12 @@ function MusicPlayer({
           />
           <Flex direction="column" gap={2} flex={1}>
             <PauseMarquee>
-              <Text fontSize="larger" noOfLines={1}>
+              <Text fontSize="larger" noOfLines={1} marginRight={2}>
                 {musicDetails.title}
               </Text>
             </PauseMarquee>
             <PauseMarquee>
-            <Text fontStyle="italic" noOfLines={1}>
+            <Text fontStyle="italic" noOfLines={1} marginRight={2}>
               {musicDetails.album && `from ${musicDetails.album} `}
               {musicDetails.artist && `by ${musicDetails.artist}`}
             </Text>
