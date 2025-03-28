@@ -17,7 +17,14 @@ export default async function DeviceManager() {
   const [user, devices] = await Promise.all([getUser(), getDevicesForUser()]);
   return user ? (
     devices.responseCode === "SUCCESS" ? (
-      <Flex direction="column" padding={4} width="100%" gap={4} flex={1}>
+      <Flex
+        direction="column"
+        padding={4}
+        width="100%"
+        gap={4}
+        flex={1}
+        key={`devices${devices.responseCode}`}
+      >
         <Flex
           direction="row"
           justifyContent="space-between"
@@ -53,6 +60,7 @@ export default async function DeviceManager() {
         gap={4}
         flex={1}
         className="h-full"
+        key={`devices${devices.responseCode}`}
       >
         <Heading>Device Manager</Heading>
         <Text>Could not fetch devices!</Text>

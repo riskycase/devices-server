@@ -5,6 +5,7 @@ import {
   PopoverTrigger,
   Text,
   theme,
+  useBoolean,
   useDisclosure,
 } from "@chakra-ui/react";
 import {
@@ -95,12 +96,14 @@ export default function BatteryDetails({
     deviceBatteryDetails.powerSource =
       BATTERY_POWER_SOURCE[deviceBatteryDetails.powerSource];
     deviceBatteryDetails.status = BATTERY_STATUS[deviceBatteryDetails.status];
+    const [state, {toggle}] = useBoolean(false);
     return (
       <Popover
         placement="bottom-end"
+        isOpen={state}
       >
         <PopoverTrigger>
-          <Flex direction="row" alignItems="center" gap={2}>
+          <Flex direction="row" alignItems="center" gap={2} onClick={toggle}>
             <Text>{deviceBatteryDetails.level}%</Text>
             {icon.iconElement && <icon.iconElement />}
           </Flex>
