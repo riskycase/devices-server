@@ -45,7 +45,7 @@ export function authenticateGenerator(server: Server) {
               },
               1000,
               socket.handshake.auth.deviceId
-            ),
+            ) as unknown as number,
             channels: {},
           };
           socket.join(device.userId);

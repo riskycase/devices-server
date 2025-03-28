@@ -25,7 +25,7 @@ export type SocketDetails = {
   authToken: string;
   userId: string;
   socket: Socket
-  keepAlive: NodeJS.Timeout;
+  keepAlive: number;
   lastUpdated: number;
   channels: { [channel: string]: string | undefined };
 };
