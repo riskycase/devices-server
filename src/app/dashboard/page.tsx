@@ -35,7 +35,6 @@ export default function Dashboard() {
         userId: session.data.userId,
       };
       listener.on("init", (message) => {
-        console.log(message);
         setDevicesState(message);
       });
       listener.onAny((channel, message) => {

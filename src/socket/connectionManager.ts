@@ -35,6 +35,7 @@ export default function connectionManager(server: Server) {
             channel === "deviceDisconnect"
           )
             return;
+          socketDetails.lastUpdated = Date.now();
           const messageJSON = JSON.parse(message);
           if (messageJSON.authToken !== socketDetails.authToken) return;
           if (channel.startsWith("delta.")) {

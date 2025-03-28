@@ -27,6 +27,25 @@ export function authenticateGenerator(server: Server) {
             authToken,
             userId: device.userId,
             socket,
+            lastUpdated: Date.now(),
+            keepAlive: setInterval(
+              (deviceId: string) => {
+                if (devices[deviceId]?.lastUpdated < Date.now() - 30000) {
+                  devices[deviceId].socket.disconnect();
+                  const timeout = devices[deviceId].keepAlive;
+                  clearInterval(timeout);
+                  server.to(devices[deviceId].userId).emit(
+                    "deviceDisconnect",
+                    JSON.stringify({
+                      deviceId: deviceId,
+                    })
+                  );
+                  delete devices[deviceId];
+                }
+              },
+              1000,
+              socket.handshake.auth.deviceId
+            ),
             channels: {},
           };
           socket.join(device.userId);
