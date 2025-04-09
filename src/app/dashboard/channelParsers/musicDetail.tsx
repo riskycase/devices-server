@@ -79,12 +79,12 @@ function MusicPlayer({
       ? milliseconds - Number(musicDetails.updatedAt)
       : 0);
   const startLabel = `${Math.floor(durationNow / 60000)}:${Math.floor(
-    (durationNow % 60000) / 1000
+    (durationNow % 60000) / 1000,
   )
     .toString()
     .padStart(2, "0")}`;
   const endLabel = `${Math.floor(musicDetails.duration / 60000)}:${Math.floor(
-    (musicDetails.duration / 1000) % 60
+    (musicDetails.duration / 1000) % 60,
   )
     .toString()
     .padStart(2, "0")}`;
@@ -112,10 +112,10 @@ function MusicPlayer({
               </Text>
             </PauseMarquee>
             <PauseMarquee>
-            <Text fontStyle="italic" noOfLines={1} marginRight={2}>
-              {musicDetails.album && `from ${musicDetails.album} `}
-              {musicDetails.artist && `by ${musicDetails.artist}`}
-            </Text>
+              <Text fontStyle="italic" noOfLines={1} marginRight={2}>
+                {musicDetails.album && `from ${musicDetails.album} `}
+                {musicDetails.artist && `by ${musicDetails.artist}`}
+              </Text>
             </PauseMarquee>
             <Slider
               min={0}
@@ -158,7 +158,7 @@ function MusicPlayer({
                   sendCommand(
                     musicDetails.playingState == PLAYING_STATE.PLAYING
                       ? "pause"
-                      : "play"
+                      : "play",
                   )
                 }
                 aria-label="Music play/pause"
@@ -198,7 +198,7 @@ export default function MusicDetails({
       );
     });
     const musicPlayers = players.map(
-      (player) => JSON.parse(musicDetails[player]) as MusicPlayerState
+      (player) => JSON.parse(musicDetails[player]) as MusicPlayerState,
     );
     const albumArts = JSON.parse(albumArtsString);
     return players.length > 0 ? (

@@ -8,6 +8,7 @@ import { UpdateSession, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import DeviceDetail from "./deviceDetail";
 import { Session } from "next-auth";
+import ScreenWakeLock from "./screenWakelock";
 
 export default function Dashboard() {
   const session = useSession() as {
@@ -20,7 +21,7 @@ export default function Dashboard() {
   const [devicesState, setDevicesState] = useState<string>("{}");
 
   function sendCommand(commandString: string) {
-    listener.emit("command", commandString)
+    listener.emit("command", commandString);
   }
 
   useEffect(() => {
@@ -60,7 +61,7 @@ export default function Dashboard() {
                 ...JSON.parse(
                   devicesStateJSON[deviceId].channels[
                     channel.replace("delta.", "")
-                  ] || "{}"
+                  ] || "{}",
                 ),
                 ...JSON.parse(messageJSON.body),
               });
@@ -84,7 +85,10 @@ export default function Dashboard() {
       flex={1}
       className="h-full"
     >
-      <Heading>Dashboard</Heading>
+      <Flex direction="row" alignItems="center" justifyContent="space-between">
+        <Heading>Dashboard</Heading>
+        <ScreenWakeLock />
+      </Flex>
       <Flex direction="column" gap={{ base: 1, lg: 2 }}>
         {devices.map((device) => (
           <DeviceDetail

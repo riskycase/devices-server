@@ -54,7 +54,7 @@ enum BATTERY_STATUS {
 function getIcon(
   batteryLevel: number,
   status: BATTERY_STATUS,
-  health: BATTERY_HEALTH
+  health: BATTERY_HEALTH,
 ) {
   if (health != BATTERY_HEALTH.Good) {
     return MdBatteryAlert;
@@ -89,19 +89,16 @@ export default function BatteryDetails({
     const iconElement = getIcon(
       deviceBatteryDetails.level,
       deviceBatteryDetails.status,
-      deviceBatteryDetails.health
+      deviceBatteryDetails.health,
     );
     const icon = { iconElement };
     deviceBatteryDetails.health = BATTERY_HEALTH[deviceBatteryDetails.health];
     deviceBatteryDetails.powerSource =
       BATTERY_POWER_SOURCE[deviceBatteryDetails.powerSource];
     deviceBatteryDetails.status = BATTERY_STATUS[deviceBatteryDetails.status];
-    const [state, {toggle}] = useBoolean(false);
+    const [state, { toggle }] = useBoolean(false);
     return (
-      <Popover
-        placement="bottom-end"
-        isOpen={state}
-      >
+      <Popover placement="bottom-end" isOpen={state}>
         <PopoverTrigger>
           <Flex direction="row" alignItems="center" gap={2} onClick={toggle}>
             <Text>{deviceBatteryDetails.level}%</Text>
@@ -129,7 +126,10 @@ export default function BatteryDetails({
                 {Number(deviceBatteryDetails.voltage / 1000).toFixed(1)}V
               </Text>
               <Text>
-                {Number(Math.abs(deviceBatteryDetails.current / 1000)).toFixed(1)}mA
+                {Number(Math.abs(deviceBatteryDetails.current / 1000)).toFixed(
+                  1,
+                )}
+                mA
               </Text>
             </Flex>
           </Flex>
