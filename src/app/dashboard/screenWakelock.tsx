@@ -30,8 +30,10 @@ export default function ScreenWakeLock() {
           setWakelockSentinel(sentinel);
           setWakelockState(WakelockSentinelStates.ACTIVE);
         })
+        .then(() => document.body.requestFullscreen())
         .catch(() => {
           setWakelockState(WakelockSentinelStates.INACTIVE);
+          document.exitFullscreen();
         });
     }
   }, [document.visibilityState]);
@@ -50,13 +52,16 @@ export default function ScreenWakeLock() {
                   setWakelockSentinel(sentinel);
                   setWakelockState(WakelockSentinelStates.ACTIVE);
                 })
+                .then(() => document.body.requestFullscreen())
                 .catch(() => {
                   setWakelockState(WakelockSentinelStates.INACTIVE);
+                  document.exitFullscreen();
                 });
             } else {
               wakelockSentinel?.release().then(() => {
                 setWakelockSentinel(undefined);
                 setWakelockState(WakelockSentinelStates.INACTIVE);
+                document.exitFullscreen();
               });
             }
           }}
